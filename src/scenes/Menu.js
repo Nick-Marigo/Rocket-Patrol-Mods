@@ -6,7 +6,9 @@ class Menu extends Phaser.Scene {
     preload() {
         this.load.image('rocket', './assets/Rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
+        this.load.image('starfield', './assets/newStarField.png');
+        this.load.image('meteorfield', './assets/starFieldMeteor.png');
+        this.load.image('starfieldtop', './assets/newStarFieldTop.png');
         this.load.spritesheet('explosion', './assets/explosion.png', {
             frameWidth: 64,
             frameHeight: 32,
@@ -71,9 +73,8 @@ class Menu extends Phaser.Scene {
     }
 
     // display high score text
-    this.highScoreText = this.add.text(borderUISize + borderPadding*15, borderUISize + borderPadding*2, 'High Score: ' + this.registry.get('highScore'), scoreHighConfig);
-    //this.highScoreText.setText('High Score: ' + highScore);
-        
+    this.highScoreText = this.add.text(borderUISize + borderPadding*32, borderUISize + borderPadding*2, 'High Score: ' + this.registry.get('highScore'), scoreHighConfig);
+
     }
 
     update() {

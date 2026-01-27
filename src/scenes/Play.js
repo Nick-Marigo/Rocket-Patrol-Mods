@@ -7,6 +7,8 @@ class Play extends Phaser.Scene {
     
     // place tile sprite
     this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+    this.meteorfield = this.add.tileSprite(0, 0, 640, 480, 'meteorfield').setOrigin(0, 0);
+    this.starfieldtop = this.add.tileSprite(0, 0, 640, 480, 'starfieldtop').setOrigin(0, 0);
 
     // green UI background
     this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
@@ -85,8 +87,19 @@ class Play extends Phaser.Scene {
 
     // display high score text
     this.highScore = this.registry.get('highScore');
-    this.highScoreText = this.add.text(borderUISize + borderPadding*15, borderUISize + borderPadding*2, 'High Score: ' + this.registry.get('highScore'), scoreHighConfig);
+    this.highScoreText = this.add.text(borderUISize + borderPadding*32, borderUISize + borderPadding*2, 'High Score: ' + this.registry.get('highScore'), scoreHighConfig);
     //this.highScoreText.setText('High Score: ' + highScore);
+
+    // Count down timer
+    this.remainingTime = game.settings.gameTimer / 1000;
+    this.timeText = this.add.text(borderUISize + borderPadding*12, borderUISize + borderPadding*2, this.remainingTime, scoreHighConfig);
+    this.timeEvent = this.time.addEvent({
+        delay: 1000,
+        callback: this.onEvent,
+        callbackScope: this,
+        loop: true
+    });
+
 
     }
 
@@ -107,7 +120,9 @@ class Play extends Phaser.Scene {
             this.highScoreText.setText('High Score: ' + this.p1Score);
         }
 
-        this.starfield.tilePositionX -= 4;
+        this.starfield.tilePositionX -= 2;
+        this.meteorfield.tilePositionX -= 1;
+        this.starfieldtop.tilePositionX -= 4;
 
         if(!this.gameOver) {
             this.p1Rocket.update()
@@ -157,6 +172,14 @@ class Play extends Phaser.Scene {
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
         //this.sound.play('sfx-explosion');
+    }
+
+    onEvent() {
+        this.remainingTime -= 1;
+        this.timeText.setText(this.remainingTime);
+        if (this.remainingTime <= 0) {
+            this.timeEvent.remove();
+        }
     }
 
 }
