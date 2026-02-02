@@ -4,6 +4,14 @@ class Menu extends Phaser.Scene {
     }
 
     preload() {
+
+        this.load.spritesheet('startButton', './assets/StartButton.png', {
+            framewidth: 80,
+            frameHeight: 32,
+            startFrame: 0,
+            endFrame: 1
+        });
+
         this.load.image('rocket', './assets/Rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('starfield', './assets/newStarField.png');
@@ -64,6 +72,9 @@ class Menu extends Phaser.Scene {
     menuConfig.color = '#000';
     this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
 
+    // New display menu
+    this.add.image(game.config.width/2, game.config.height/2 - borderUISize*4, 'startButton').setOrigin(0.5);
+
     keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
@@ -88,6 +99,8 @@ class Menu extends Phaser.Scene {
     // display high score text
     this.highScoreText = this.add.text(borderUISize + borderPadding*32, borderUISize + borderPadding*2, 'High Score: ' + this.registry.get('highScore'), scoreHighConfig);
 
+    currentPlayer = 1;
+
     }
 
     update() {
@@ -97,7 +110,7 @@ class Menu extends Phaser.Scene {
                 spaceshipSpeed: 3,
                 gameTimer: 60000
             }
-            //this.sound.play('sfx-select');
+            this.sound.play('sfx-select');
             this.scene.start('playScene');
         }
 
@@ -107,7 +120,7 @@ class Menu extends Phaser.Scene {
                 spaceshipSpeed: 4,
                 gameTimer: 45000
             }
-            //this.sound.play('sfx-select');
+            this.sound.play('sfx-select');
             this.scene.start('playScene');
         }
 

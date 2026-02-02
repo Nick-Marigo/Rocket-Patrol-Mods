@@ -71,11 +71,22 @@ class Play extends Phaser.Scene {
     scoreConfig.fixedWidth = 0;
     this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
         if(currentPlayer === 0) {
-        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
         } else if (currentPlayer === 1) {
-        this.add.text(game.config.width/2, game.config.height/2, 'PLAYER 2 TURN', scoreConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + 64, "Press (E) to start player 2's turn", scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2, 'PLAYER 2 TURN', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, "Press (E) to start player 2's turn", scoreConfig).setOrigin(0.5);
+        } else if (currentPlayer === 2) {
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 128, `P1 Score: ${p1Total}  |  P2 Score: ${p2Total}`, scoreConfig).setOrigin(0.5);
+            if (p1Total > p2Total) {
+                this.add.text(game.config.width/2, game.config.height/2 + 192, 'PLAYER 1 WINS!', scoreConfig).setOrigin(0.5);
+            } else if (p2Total > p1Total) {
+                this.add.text(game.config.width/2, game.config.height/2 + 192, 'PLAYER 2 WINS!', scoreConfig).setOrigin(0.5);
+            } else {
+                this.add.text(game.config.width/2, game.config.height/2 + 192, "IT'S A TIE!", scoreConfig).setOrigin(0.5);
+            }
         }
         this.gameOver = true;
     }, null, this);
@@ -123,7 +134,7 @@ class Play extends Phaser.Scene {
             this.scene.start('menuScene');
         }
 
-        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyPlayer2) && currentPlayer === 1) {
             currentPlayer = 2;
             this.scene.restart();
         }
