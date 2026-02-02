@@ -35,8 +35,9 @@ class Play extends Phaser.Scene {
     keyRESET = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
     keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    keyPlayer2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
-    this.p1Score = 0;
+    this.score = 0;
 
     //display score
     let scoreConfig = {
@@ -52,7 +53,7 @@ class Play extends Phaser.Scene {
         fixedWidth: 100
     }
 
-    this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+    this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.score, scoreConfig);
 
     // GAME OVER flag
     this.gameOver = false;
@@ -69,8 +70,13 @@ class Play extends Phaser.Scene {
     // 60-second play clock
     scoreConfig.fixedWidth = 0;
     this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+        if(currentPlayer === 0) {
         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
+        } else if (currentPlayer === 1) {
+        this.add.text(game.config.width/2, game.config.height/2, 'PLAYER 2 TURN', scoreConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + 64, "Press (E) to start player 2's turn", scoreConfig).setOrigin(0.5);
+        }
         this.gameOver = true;
     }, null, this);
 
@@ -117,10 +123,15 @@ class Play extends Phaser.Scene {
             this.scene.start('menuScene');
         }
 
+        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            currentPlayer = 2;
+            this.scene.restart();
+        }
+
         // update high score
-        if(this.registry.get('highScore') < this.p1Score) {
-            this.registry.set('highScore', this.p1Score);
-            this.highScoreText.setText('High Score: ' + this.p1Score);
+        if(this.registry.get('highScore') < this.score) {
+            this.registry.set('highScore', this.score);
+            this.highScoreText.setText('High Score: ' + this.score);
         }
 
         this.starfield.tilePositionX -= 2;
@@ -128,6 +139,11 @@ class Play extends Phaser.Scene {
         this.starfieldtop.tilePositionX -= 4;
 
         if(!this.gameOver) {
+            if(currentPlayer === 1) {
+                p1Total = this.score;
+            } else {
+                p2Total = this.score;
+            }
             this.p1Rocket.update()
             this.ship01.update();
             this.ship02.update();
@@ -177,8 +193,8 @@ class Play extends Phaser.Scene {
         })
 
         // score add and text update
-        this.p1Score += ship.points;
-        this.scoreLeft.text = this.p1Score;
+        this.score += ship.points;
+        this.scoreLeft.text = this.score;
         this.sound.play('sfx-explosion');
     }
 
