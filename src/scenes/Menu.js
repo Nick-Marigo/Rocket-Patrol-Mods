@@ -15,6 +15,12 @@ class Menu extends Phaser.Scene {
             startFrame: 0,
             endFrame: 9
         });
+        this.load.spritesheet('specialSpaceship', './assets/SpecialSpaceship.png', {
+            frameWidth: 64,
+            frameHeight: 32,
+            startFrame: 0,
+            endFrame: 3
+        })
 
         // load audio
         this.load.audio('sfx-select', './assets/sfx-select.wav');
@@ -28,6 +34,13 @@ class Menu extends Phaser.Scene {
             key: 'explode',
             frames: this.anims.generateFrameNumbers('explosion', {start: 0, end: 9, first: 0}), 
             frameRate: 30
+        })
+
+        this.anims.create({
+            key: 'specialShip',
+            frames: this.anims.generateFrameNumbers('specialSpaceship', {start: 0, end: 3, first: 0}), 
+            frameRate: 10,
+            repeat: -1
         })
 
     //display score

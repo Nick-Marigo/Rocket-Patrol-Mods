@@ -14,19 +14,21 @@ class Play extends Phaser.Scene {
     this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
 
     // white borders
-    this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-    this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-    this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0); 
-    this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
+    this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0).setDepth(1);
+    this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0).setDepth(1);
+    this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0).setDepth(1); 
+    this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0).setDepth(1);
  
     // add rocket (p1)
     this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
     // add spaceships (x3)
-    this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
-    this.ship02 = new Spaceship(this, game.config.width + borderUISize *3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0, 0);
-    this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0, 0);
+    this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4 + borderPadding*4, 'spaceship', 0, 30).setOrigin(0, 0);
+    this.ship02 = new Spaceship(this, game.config.width + borderUISize *3, borderUISize*5 + borderPadding*6, 'spaceship', 0, 20).setOrigin(0, 0);
+    this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*8, 'spaceship', 0, 10).setOrigin(0, 0);
 
+    this.specialShip = new SpecialSpaceship(this, game.config.width + borderUISize*4, borderUISize*4, 'specialSpaceship', 0, 50).setOrigin(0,0);
+    this.specialShip.anims.play('specialShip');
 
     // define keys
     keyFIRE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -60,6 +62,7 @@ class Play extends Phaser.Scene {
         this.ship01.increaseSpeed();
         this.ship02.increaseSpeed();
         this.ship03.increaseSpeed();
+        this.specialShip.increaseSpeed();
         this.p1Rocket.increaseSpeed();
     }, null, this);
 
@@ -87,8 +90,8 @@ class Play extends Phaser.Scene {
 
     // display high score text
     this.highScore = this.registry.get('highScore');
-    this.highScoreText = this.add.text(borderUISize + borderPadding*32, borderUISize + borderPadding*2, 'High Score: ' + this.registry.get('highScore'), scoreHighConfig);
-    //this.highScoreText.setText('High Score: ' + highScore);
+    this.highScoreText = this.add.text(borderUISize + borderPadding*30, borderUISize + borderPadding*2, 'High Score: ' + this.registry.get('highScore'), scoreHighConfig);
+
 
     // Count down timer
     this.remainingTime = game.settings.gameTimer / 1000;
@@ -129,6 +132,7 @@ class Play extends Phaser.Scene {
             this.ship01.update();
             this.ship02.update();
             this.ship03.update();
+            this.specialShip.update();
         }
 
         // check collisions
@@ -143,6 +147,10 @@ class Play extends Phaser.Scene {
         if(this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
            this.shipExplode(this.ship01);
+        }
+        if(this.checkCollision(this.p1Rocket, this.specialShip)) {
+            this.p1Rocket.reset();
+           this.shipExplode(this.specialShip);
         }
 
     }
@@ -171,7 +179,7 @@ class Play extends Phaser.Scene {
         // score add and text update
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
-        //this.sound.play('sfx-explosion');
+        this.sound.play('sfx-explosion');
     }
 
     onEvent() {

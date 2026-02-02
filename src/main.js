@@ -10,7 +10,7 @@ New Scrolling tile sprite background (1) Done
 Allow control of rocket after fired (1) Done
 Display remaining time (3) Done
 New title screen (3)
-New Spaceship type (5)
+New Spaceship type (5) Done
 Alternating two-player mode (5)
 */
 
