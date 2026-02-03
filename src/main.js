@@ -1,6 +1,6 @@
 /*
 Nick Marigo
-Rocket Patrol Modded
+Rocket Patrol: Remix
 Hours to complete: 12
 Mods:
 High Score (1) Done
