@@ -89,7 +89,7 @@ class Menu extends Phaser.Scene {
     game.settings = {
         spaceshipSpeed: 3,
         gameTimer: 60000    
-    }
+    };
 
     // New display menu
 
@@ -202,8 +202,6 @@ class Menu extends Phaser.Scene {
 
     // display high score text
     this.highScoreText = this.add.text(10, game.config.height/2 +200, 'High Score: ' + this.registry.get('highScore'), scoreHighConfig);
-
-    currentPlayer = 1;
 
     }
 
